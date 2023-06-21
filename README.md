@@ -19,11 +19,13 @@ Newcastle University
 
 ## Built With
 
-This section is intended to list the frameworks and tools you're using to develop this software. Please link to the home page or documentatation in each case.
+The site uses Jekyll to run locally and GitHub Pages to deploy.
 
-[Framework 1](https://something.com)  
-[Framework 2](https://something.com)  
-[Framework 3](https://something.com)  
+After following the installation instructions [here](https://jekyllrb.com/docs/), run:
+
+```
+bundle exec jekyll serve --livereload
+```
 
 ## Getting Started
 
