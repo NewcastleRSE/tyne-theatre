@@ -1,3 +1,5 @@
+var allData;
+
 $(window).on('load', function() {
 
 const sheets = 'AIzaSyCVD9iMwj55GMFScjorofPqY4bYD2s-3pg'
@@ -16,12 +18,16 @@ $.getJSON(
 
   // parse data from Sheets API into JSON
   var parsedData = Papa.parse(Papa.unparse(data['values']), {header: true} ).data
-createTable(parsedData)
 
 
+// data processing
+allData = standardiseTypeCol(parsedData)
 
+ // create radio buttons for genre
+ createGenreRadios()
 
-
+ // create table
+ createTable(allData)
 }
 
 )
@@ -29,7 +35,7 @@ createTable(parsedData)
 })
 
 
-function createTable(jsonData) {
+function createTable(dataToDisplay) {
     // Get the container element where the table will be inserted
     let container = document.getElementById("showData");
          
@@ -40,7 +46,7 @@ function createTable(jsonData) {
     
 
     // Get the keys (column names) of the first object in the JSON data
-    let cols = Object.keys(jsonData[0]);
+    let cols = Object.keys(dataToDisplay[0]);
     
     // Create the header element
     let thead = document.createElement("thead");
@@ -53,12 +59,16 @@ function createTable(jsonData) {
        th.innerText = item; // Set the column name as the text of the header cell
        tr.appendChild(th); // Append the header cell to the header row
     });
+
+
+   
+
     thead.appendChild(tr); // Append the header row to the header
     table.append(thead) // Append the header to the table
     
     let tbody = document.createElement('tbody')
     // Loop through the JSON data and create table rows
-    jsonData.forEach((item) => {
+    dataToDisplay.forEach((item) => {
        let tr = document.createElement("tr");
        
        // Get the values of the current object in the JSON data
@@ -78,4 +88,60 @@ function createTable(jsonData) {
 //     // tell DatabTables to add styling etc.
 // $('#myTable').DataTable();
 
+}
+
+function createGenreRadios() {
+    
+    // get all possible genres from 'Type' column
+    var types = Object.keys(_.countBy(allData, function(data) { return data.Type; }))
+    console.log(_.countBy(allData, function(data) { return allData.Type; }))
+    types.forEach((type) => {
+        // exclude blank
+        if (type != '') {
+            var input = document.createElement('input')
+            input.classList.add('form-check-input')
+            input.setAttribute('type', 'radio')
+            input.setAttribute('name', 'genre')
+            input.setAttribute('id', 'radio' + type)
+            input.onclick = function() {
+                filterGenre(type)
+            }
+            var label = document.createElement('label')
+            label.classList.add('form-check-label')
+            label.setAttribute('for', 'radio' + type)
+            label.innerHTML = type
+            var div = document.createElement('div')
+            div.classList.add('form-check')
+            div.classList.add('ml-4')
+            div.appendChild(input)
+            div.appendChild(label)
+            let container = document.getElementById("genreBtns");
+            container.appendChild(div)
+        }
+    })
+    
+    // create html
+
+}
+
+function standardiseTypeCol(parsedData) {
+
+    parsedData.forEach((el) => {
+        // only first letter should be upper case and remove spaces at start or end
+        el.Type = el.Type.trim()
+        el.Type = el.Type.toLowerCase()
+        el.Type = el.Type.charAt(0).toUpperCase() + el.Type.slice(1)
+    })
+    return parsedData
+    
+}
+
+function filterGenre(type) {
+    var container = document.getElementById('showData')
+    container.replaceChildren()
+
+    // select only entries where type is correct
+    var filteredData = _.filter(allData, function(o) { return o.Type === type; });
+
+    createTable(filteredData)
 }
