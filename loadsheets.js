@@ -22,6 +22,7 @@ $.getJSON(
 
 // data processing
 allData = standardiseTypeCol(parsedData)
+allData = standardiseDataCol(allData)
 
  // create radio buttons for genre
  createGenreRadios()
@@ -120,9 +121,11 @@ function createGenreRadios() {
         }
     })
     
-    // create html
+   
 
 }
+
+// ----- standardising content
 
 function standardiseTypeCol(parsedData) {
 
@@ -133,8 +136,40 @@ function standardiseTypeCol(parsedData) {
         el.Type = el.Type.charAt(0).toUpperCase() + el.Type.slice(1)
     })
     return parsedData
-    
 }
+
+function standardiseDataCol(data) {
+    data.forEach((el) => {
+        // split into list based on ;
+       var dates = el.Date.split(";")
+       // isolate date and convert to readable format
+       var formattedDates = []
+       dates.forEach((d) => {
+          // remove space
+          d = d.trim()
+        var dateIsolated = d.substring(0,9)
+
+        var yr = dateIsolated.substring(0,4)
+        var month = dateIsolated.substring(4, 6)-1
+        var day = dateIsolated.substring(6, 8)
+
+        if (day[0] === 0) {
+            day = day[1]
+        }
+
+        console.log(yr, month, day )
+       var date = new Date(yr, month, day)
+        console.log(d + ' = ' +date)
+        formattedDates.push(date.toDateString())
+       })
+      
+       el.Date = formattedDates.join(', ')
+    })
+
+    return data
+}
+
+//  ----- filtering data
 
 function filterGenre(type) {
     var container = document.getElementById('showData')
@@ -145,3 +180,4 @@ function filterGenre(type) {
 
     createTable(filteredData)
 }
+
