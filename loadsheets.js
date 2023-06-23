@@ -377,10 +377,15 @@ function filterGenre(type) {
     var container = document.getElementById('showData')
     container.replaceChildren()
 
+    if (type === 'all' ) {
+        createTable(allData)
+    } else {
+
     // select only entries where type is correct
     var filteredData = _.filter(allData, function (o) { return o.Type === type; });
 
     createTable(filteredData)
+}
 }
 
 // -----
@@ -391,7 +396,9 @@ function browseAll() {
     $('#browse').show()
     $('#welcomeText').hide()
 
-
+    // reset checkbox to displaying all entries
+    document.getElementById('all').click()
+console.log(document.getElementById('all'))
 
 }
 

@@ -61,8 +61,13 @@
 
     <!-- Browsing by genre -->
     <div id="browse">
-        <form id="genreBtns" class="d-flex flex-wrap gap-3">
-
+        <h3>Browse by genre</h3>
+        <p>Filter performances by genre</p>
+        <form id="genreBtns" class="d-flex flex-wrap gap-2">
+<div class="form-check ml-4">
+    <input class="form-check-input" onclick="filterGenre('all')"  type="radio" name="genre" id="all">
+    <label class="form-check-label"  for="all">All</label>
+</div>
         </form>
 
         <div id="showData">
