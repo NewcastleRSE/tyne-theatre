@@ -3,7 +3,7 @@ let today = new Date();
 let cols;
 
 // set starting month and year for calendar, not month is zero indexed
-let currentMonth = 8;
+let currentMonth = 0;
 let currentYear = 1867;
 
 $(window).on('load', function () {
@@ -155,6 +155,18 @@ function createCalendar(month, year) {
 
     let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+    // create date picker
+    var yearPicker = document.getElementById('year')
+    for (let yr = 1867; yr < 1920; yr++) {
+        var option = document.createElement('option')
+        
+        option.setAttribute('value', yr)
+        option.innerText = yr
+        yearPicker.appendChild(option)
+    }
+
+
+
     let monthAndYear = document.getElementById("monthAndYear");
 
     let firstDay = (new Date(year, month)).getDay();
@@ -224,11 +236,17 @@ function createCalendar(month, year) {
 
                             var tr = document.createElement('tr')
 
-                            for (let i = 0; i < Object.keys(chosenEvent).length - 1; i++) {
-                                let td = document.createElement("td");
+                            for (let i = 0; i < Object.keys(chosenEvent).length - 2; i++) {
+                                // don't include colour id ID
+                               
+                                
+let td = document.createElement("td");
 
                                 td.innerText = chosenEvent[Object.keys(chosenEvent)[i]]; // Set the value as the text of the table cell
                                 tr.appendChild(td); // Append the table cell to the table row
+                                
+                               
+                                
                             }
 
                             tbody.appendChild(tr); // Append the table row to the table
@@ -279,14 +297,12 @@ function getEventsForMonth(month, year) {
         // take next colour for next event
         currentColour += 1
     })
-    console.log(events)
+   
     return events
 
 }
 
-function displayEvent() {
 
-}
 
 
 function next() {
@@ -302,6 +318,8 @@ function previous() {
 }
 
 function jump() {
+    let selectYear = document.getElementById("year");
+    let selectMonth = document.getElementById("month");
     currentYear = parseInt(selectYear.value);
     currentMonth = parseInt(selectMonth.value);
     createCalendar(currentMonth, currentYear);
