@@ -6,8 +6,8 @@ let cols;
 let currentMonth = 0;
 let currentYear = 1867;
 // hide calendar and browsing
-            $('#calendar').hide()
-            $('#browse').hide()
+$('#calendar').hide()
+$('#browse').hide()
 $(window).on('load', function () {
 
     const sheets = 'AIzaSyCVD9iMwj55GMFScjorofPqY4bYD2s-3pg'
@@ -24,7 +24,7 @@ $(window).on('load', function () {
 
         (data) => {
 
-            
+
 
             // parse data from Sheets API into JSON
             var parsedData = Papa.parse(Papa.unparse(data['values']), { header: true }).data
@@ -102,7 +102,16 @@ function createTable(dataToDisplay) {
         // Loop through the values and create table cells other than the final ID column
         for (let i = 0; i < vals.length - 1; i++) {
             let td = document.createElement("td");
-            td.innerText = vals[i]; // Set the value as the text of the table cell
+            // first column is date and needs styling 
+            if (i === 0) {
+                var formattedDates = shorternDates(vals[i])
+                td.innerText = formattedDates; // Set the value as the text of the table cell
+            } else {
+                td.innerText = vals[i]; // Set the value as the text of the table cell
+            }
+
+
+
             tr.appendChild(td); // Append the table cell to the table row
         }
 
@@ -160,7 +169,7 @@ function createCalendar(month, year) {
     var yearPicker = document.getElementById('year')
     for (let yr = 1867; yr < 1920; yr++) {
         var option = document.createElement('option')
-        
+
         option.setAttribute('value', yr)
         option.innerText = yr
         yearPicker.appendChild(option)
@@ -239,15 +248,23 @@ function createCalendar(month, year) {
 
                             for (let i = 0; i < Object.keys(chosenEvent).length - 2; i++) {
                                 // don't include colour id ID
-                               
-                                
 let td = document.createElement("td");
+                                 // first column is date and needs styling 
+                                 var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
+            if (i === 0) {
+                var formattedDates = shorternDates(innerText)
+                td.innerText = formattedDates; // Set the value as the text of the table cell
+            } else {
+                td.innerText = innerText; // Set the value as the text of the table cell
+            }
 
-                                td.innerText = chosenEvent[Object.keys(chosenEvent)[i]]; // Set the value as the text of the table cell
-                                tr.appendChild(td); // Append the table cell to the table row
                                 
+
                                
-                                
+                                tr.appendChild(td); // Append the table cell to the table row
+
+
+
                             }
 
                             tbody.appendChild(tr); // Append the table row to the table
@@ -298,7 +315,7 @@ function getEventsForMonth(month, year) {
         // take next colour for next event
         currentColour += 1
     })
-   
+
     return events
 
 }
@@ -347,6 +364,7 @@ function standardiseDataCol(data) {
         var dates = el.Date.split(";")
         // isolate date and convert to readable format
         var formattedDates = []
+        
         dates.forEach((d) => {
             // remove space
             d = d.trim()
@@ -371,21 +389,32 @@ function standardiseDataCol(data) {
     return data
 }
 
+function shorternDates(dates) {
+    var formatted = []
+    
+    dates.split(',').forEach((d) => {
+        d = new Date(d)
+        formatted.push(d.toLocaleDateString())
+       
+    })
+    return  formatted.join(', ')
+}
+
 //  ----- filtering data
 
 function filterGenre(type) {
     var container = document.getElementById('showData')
     container.replaceChildren()
 
-    if (type === 'all' ) {
+    if (type === 'all') {
         createTable(allData)
     } else {
 
-    // select only entries where type is correct
-    var filteredData = _.filter(allData, function (o) { return o.Type === type; });
+        // select only entries where type is correct
+        var filteredData = _.filter(allData, function (o) { return o.Type === type; });
 
-    createTable(filteredData)
-}
+        createTable(filteredData)
+    }
 }
 
 // -----
@@ -398,7 +427,7 @@ function browseAll() {
 
     // reset checkbox to displaying all entries
     document.getElementById('all').click()
-console.log(document.getElementById('all'))
+    console.log(document.getElementById('all'))
 
 }
 
