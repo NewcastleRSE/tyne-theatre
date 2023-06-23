@@ -26,7 +26,7 @@ $(window).on('load', function () {
 
     //    Get data from sheets
     $.getJSON(
-        "https://sheets.googleapis.com/v4/spreadsheets/1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs/values/newspaper1867?key=" + sheets,
+        "https://sheets.googleapis.com/v4/spreadsheets/1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs/values/sheet1?key=" + sheets,
 
         (data) => {
 
@@ -74,6 +74,7 @@ function createTable(dataToDisplay) {
 
     // Get the keys (column names) of the first object in the JSON data
     cols = Object.keys(dataToDisplay[0]);
+   
 
     // Create the header element
     let thead = document.createElement("thead");
@@ -81,8 +82,8 @@ function createTable(dataToDisplay) {
 
     // Loop through the column names and create header cells
     cols.forEach((item) => {
-        // ignore ID column
-        if (item != 'ID') {
+        // ignore ID and checked by columns
+        if (item != 'ID' && !item.startsWith('Checked by?')) {
             let th = document.createElement("th");
             th.setAttribute('scope', 'col')
             th.innerText = item; // Set the column name as the text of the header cell
@@ -106,7 +107,7 @@ function createTable(dataToDisplay) {
         let vals = Object.values(item);
 
         // Loop through the values and create table cells other than the final ID column
-        for (let i = 0; i < vals.length - 2; i++) {
+        for (let i = 0; i < vals.length - 3; i++) {
             let td = document.createElement("td");
             // first column is date and needs styling 
             if (i === 0) {
@@ -253,8 +254,9 @@ function createCalendar(month, year) {
 
                             var tr = document.createElement('tr')
 
-                            for (let i = 0; i < Object.keys(chosenEvent).length - 2; i++) {
-                                // don't include colour id ID
+                            for (let i = 0; i < Object.keys(chosenEvent).length - 3; i++) {
+                                
+                                
                                 let td = document.createElement("td");
                                 // first column is date and needs styling 
                                 var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
@@ -451,7 +453,7 @@ function browseAll() {
 
     // reset checkbox to displaying all entries
     document.getElementById('all').click()
-    console.log(document.getElementById('all'))
+   
 
 }
 
