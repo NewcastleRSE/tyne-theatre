@@ -5,7 +5,9 @@ let cols;
 // set starting month and year for calendar, not month is zero indexed
 let currentMonth = 0;
 let currentYear = 1867;
-
+// hide calendar and browsing
+            $('#calendar').hide()
+            $('#browse').hide()
 $(window).on('load', function () {
 
     const sheets = 'AIzaSyCVD9iMwj55GMFScjorofPqY4bYD2s-3pg'
@@ -22,8 +24,7 @@ $(window).on('load', function () {
 
         (data) => {
 
-            // hide calendar
-            browseAll()
+            
 
             // parse data from Sheets API into JSON
             var parsedData = Papa.parse(Papa.unparse(data['values']), { header: true }).data
@@ -388,6 +389,8 @@ function browseAll() {
     // hide calendar
     $('#calendar').hide()
     $('#browse').show()
+    $('#welcomeText').hide()
+
 
 
 }
@@ -396,5 +399,6 @@ function showCalendar() {
     // hide browsing
     $('#calendar').show()
     $('#browse').hide()
+    $('#welcomeText').hide()
 }
 
