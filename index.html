@@ -43,184 +43,205 @@
 <body>
     <div class="container mt-5">
 
-<div class="text-center">
-    <button class="btn btn-light" onclick="browseAll()">Browse all</button>
-    <button class="btn btn-light" onclick="showCalendar()">Calendar view</button>
-</div>
-    <!-- Info text -->
-    
-    <div id="welcomeText" class="container-lg mt-5 text-center" >
-      <div class="card-body">
-        <h5 class="card-title">Tyne Theatre Performances</h5>
-        <!-- <h6 class="card-subtitle mb-2 text-muted">Browse</h6> -->
-        <p class="card-text">Browse Tyne Theatre performances by genre or date by following the links... more info....</p>
-        <!-- <a href="#" class="card-link">Card link</a>
+        <div class="text-center">
+            <button class="btn btn-light" onclick="browseAll()">Browse all</button>
+            <button class="btn btn-light" onclick="showCalendar()">Calendar view</button>
+        </div>
+        <!-- Info text -->
+
+        <div id="welcomeText" class="container-lg mt-5 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Tyne Theatre Performances</h5>
+                <!-- <h6 class="card-subtitle mb-2 text-muted">Browse</h6> -->
+                <p class="card-text">Browse Tyne Theatre performances by genre or date by following the links... more
+                    info....</p>
+                <!-- <a href="#" class="card-link">Card link</a>
         <a href="#" class="card-link">Another link</a> -->
-      </div>
-    </div>
+            </div>
+        </div>
 
-    <!-- Browsing by genre -->
-    <div id="browse">
-        <h3>Browse by genre</h3>
-        <p>Filter performances by genre</p>
-        <form id="genreBtns" class="d-flex flex-wrap gap-2">
-<div class="form-check ml-4">
-    <input class="form-check-input" onclick="filterGenre('all')"  type="radio" name="genre" id="all">
-    <label class="form-check-label"  for="all">All</label>
-</div>
-        </form>
+        <!-- Browsing by genre -->
+        <div id="browse">
+            <h3>Browse by genre</h3>
+            <p>Filter performances by genre</p>
+            <form id="genreBtns" class="d-flex flex-wrap gap-2">
+                <div class="form-check ml-4">
+                    <input class="form-check-input" onclick="filterGenre('all')" type="radio" name="genre" id="all">
+                    <label class="form-check-label" for="all">All</label>
+                </div>
+            </form>
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
+                        <i class="fa fa-arrow-left"></i></button>
 
-        <div class="table-responsive" id="showData">
+                    <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
+                            class="fa fa-arrow-right"></i></button>
+                </div>
+             </div>
+                <div class="table-responsive" id="showData">
+
+                </div>
+
+                <div class="text-center">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
+                            <i class="fa fa-arrow-left"></i></button>
+    
+                        <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
+                                class="fa fa-arrow-right"></i></button>
+                    </div>
+                 </div>
+           
 
         </div>
 
-    </div>
+        <!-- Calendar -->
+        <!-- https://github.com/niinpatel/calendarHTML-Javascript/tree/master -->
+        <div id="calendar">
+            <h3>Browse by date</h3>
+            <p>Click on a coloured circle to view the performance</p>
+            <div class="container mt-5">
+                <div class="card">
+                    <h3 class="card-header" id="monthAndYear"></h3>
+                    <div class="card-body">
 
-    <!-- Calendar -->
-    <!-- https://github.com/niinpatel/calendarHTML-Javascript/tree/master -->
-    <div id="calendar">
-        <h3>Browse by date</h3>
-        <p>Click on a coloured circle to view the performance</p>
-        <div class="container mt-5">
-            <div class="card">
-                <h3 class="card-header" id="monthAndYear"></h3>
-                <div class="card-body">
 
-                
-                <table class="table table-bordered table-responsive-sm" id="calendar">
+                        <table class="table table-bordered table-responsive-sm" id="calendar">
+                            <thead>
+                                <tr>
+                                    <th>Sun</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="calendar-body">
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-footer">
+
+
+                        <div class="text-center">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn  " id="previous" onclick="previous()">
+                                    <i class="fa fa-arrow-left"></i></button>
+
+                                <button type="button" class="btn " id="next" onclick="next()"><i
+                                        class="fa fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <form>
+                            <div class="row  justify-content-md-center">
+
+                                <div class="col-md-auto" style="padding-right: 2px;">
+                                    <label class="lead mr-2 ml-2" for="month"></label>
+                                    <select class="form-control " name="month" id="month" onchange="jump()"
+                                        style="width:auto;">
+                                        <option value=0>Jan</option>
+                                        <option value=1>Feb</option>
+                                        <option value=2>Mar</option>
+                                        <option value=3>Apr</option>
+                                        <option value=4>May</option>
+                                        <option value=5>Jun</option>
+                                        <option value=6>Jul</option>
+                                        <option value=7>Aug</option>
+                                        <option value=8>Sep</option>
+                                        <option value=9>Oct</option>
+                                        <option value=10>Nov</option>
+                                        <option value=11>Dec</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-auto" style="padding-left: 2px;">
+                                    <label for="year"></label><select style="width:auto;" class="form-control col-sm-4"
+                                        name="year" id="year" onchange="jump()">
+
+                                    </select>
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="showInfo" class="table-responsive">
+                <table id="calTable" class="table mt-5">
                     <thead>
-                        <tr>
-                            <th>Sun</th>
-                            <th>Mon</th>
-                            <th>Tue</th>
-                            <th>Wed</th>
-                            <th>Thu</th>
-                            <th>Fri</th>
-                            <th>Sat</th>
-                        </tr>
+                        <th scope="col">
+                            Date
+                        </th>
+                        <th scope="col">
+                            Title
+                        </th>
+                        <th scope="col">
+                            Type
+                        </th>
+                        <th scope="col">
+                            Writers
+                        </th>
+                        <th scope="col">
+                            Composers
+                        </th>
+                        <th scope="col">
+                            Company
+                        </th>
+                        <th scope="col">
+                            Director
+                        </th>
+                        <th scope="col">
+                            Cast
+                        </th>
+                        <th scope="col">
+                            Notes
+                        </th>
+                        <th scope="col">
+                            Refs
+                        </th>
+                        <th scope="col">
+                            Newcastle Daily Journal review?
+                        </th>
+                        <th scope="col">
+                            Newcastle Daily Chronicle review?
+                        </th>
+                        <th scope="col">
+                            Any surviving publicity?'
+                        </th>
+                        <th scope="col">
+                            Any associated music?
+                        </th>
+                        <th scope="col">
+                            Does a script survive?
+                        </th>
+                        <th scope="col">
+                            Any associated images?
+                        </th>
                     </thead>
-
-                    <tbody id="calendar-body">
+                    <tbody id="calTableBody">
 
                     </tbody>
                 </table>
             </div>
-
-            <div class="card-footer">
-
-            
-                <div class="text-center">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn  " id="previous" onclick="previous()">
-                            <i class="fa fa-arrow-left"></i></button>
-
-                        <button type="button" class="btn " id="next" onclick="next()"><i class="fa fa-arrow-right"></i></button>
-                    </div>
-                </div>
-              
-                <form>
-                    <div class="row  justify-content-md-center">
-                    
-                        <div class="col-md-auto" style="padding-right: 2px;">
-                            <label class="lead mr-2 ml-2" for="month"></label>
-                            <select class="form-control " name="month" id="month" onchange="jump()"
-                                style="width:auto;">
-                                <option value=0>Jan</option>
-                                <option value=1>Feb</option>
-                                <option value=2>Mar</option>
-                                <option value=3>Apr</option>
-                                <option value=4>May</option>
-                                <option value=5>Jun</option>
-                                <option value=6>Jul</option>
-                                <option value=7>Aug</option>
-                                <option value=8>Sep</option>
-                                <option value=9>Oct</option>
-                                <option value=10>Nov</option>
-                                <option value=11>Dec</option>
-                            </select>
-                        </div>
-                        <div class="col-md-auto"  style="padding-left: 2px;">
-                            <label for="year"></label><select style="width:auto;" class="form-control col-sm-4" name="year"
-                        id="year" onchange="jump()">
-
-                    </select>
-                        </div>
-
-                    </div>
-
-
-
-
-
-
-                    
-                </form>
-            </div>
-            </div>
         </div>
-        <div id="showInfo" class="table-responsive">
-        <table id="calTable" class="table mt-5">
-            <thead>
-                <th scope="col">
-                    Date
-                </th>
-                <th scope="col">
-                    Title
-                </th>
-                <th scope="col">
-                    Type
-                </th>
-                <th scope="col">
-                    Writers
-                </th>
-                <th scope="col">
-                    Composers
-                </th>
-                <th scope="col">
-                    Company
-                </th>
-                <th scope="col">
-                    Director
-                </th>
-                <th scope="col">
-                    Cast
-                </th>
-                <th scope="col">
-                    Notes
-                </th>
-                <th scope="col">
-                    Refs
-                </th>
-                <th scope="col">
-                    Newcastle Daily Journal review?
-                </th>
-                <th scope="col">
-                    Newcastle Daily Chronicle review?
-                </th>
-                <th scope="col">
-                    Any surviving publicity?'
-                </th>
-                <th scope="col">
-                    Any associated music?
-                </th>
-                <th scope="col">
-                    Does a script survive?
-                </th>
-                <th scope="col">
-                    Any associated images?
-                </th>
-            </thead>
-            <tbody id="calTableBody">
 
-            </tbody>
-        </table>
+
+
+        <script type="text/javascript" src="./loadsheets.js"></script>
     </div>
-    </div>
-
-
-
-    <script type="text/javascript" src="./loadsheets.js"></script>
-</div>
 </body>
 
 </html>

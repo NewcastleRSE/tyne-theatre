@@ -11,6 +11,10 @@ let latestMonth = 11
 let currentMonth = earliestMonth;
 let currentYear = earliestYr;
 
+let rowsToDisplay = 5
+let currentPage = 0
+let allRowsIntoPages = []
+
 // hide calendar and browsing
 $('#calendar').hide()
 $('#browse').hide()
@@ -63,8 +67,12 @@ function assignIDs(data) {
 }
 
 function createTable(dataToDisplay) {
+
     // Get the container element where the table will be inserted
     let container = document.getElementById("showData");
+
+    // reset pages
+    allRowsIntoPages = []
 
     // Create the table element
     let table = document.createElement("table");
@@ -74,7 +82,7 @@ function createTable(dataToDisplay) {
 
     // Get the keys (column names) of the first object in the JSON data
     cols = Object.keys(dataToDisplay[0]);
-   
+
 
     // Create the header element
     let thead = document.createElement("thead");
@@ -99,7 +107,10 @@ function createTable(dataToDisplay) {
     table.append(thead) // Append the header to the table
 
     let tbody = document.createElement('tbody')
+    tbody.setAttribute('id', 'tBodyBrowse')
+
     // Loop through the JSON data and create table rows
+    let allHtmlRows = []
     dataToDisplay.forEach((item) => {
         let tr = document.createElement("tr");
 
@@ -122,8 +133,25 @@ function createTable(dataToDisplay) {
             tr.appendChild(td); // Append the table cell to the table row
         }
 
-        tbody.appendChild(tr); // Append the table row to the table
+        allHtmlRows.push(tr)
+        //tbody.appendChild(tr); // Append the table row to the table
     });
+
+
+    // divide rows into pages
+
+    while (allHtmlRows.length > 0) {
+        // remove first n elements and add to page
+        const nextPage = allHtmlRows.splice(0, rowsToDisplay)
+        allRowsIntoPages.push(nextPage)
+    }
+
+    // display first page
+    allRowsIntoPages[0].forEach((tr) => {
+        tbody.appendChild(tr)
+    })
+
+
     table.appendChild(tbody)
     container.appendChild(table) // Append the table to the container element
 
@@ -146,6 +174,7 @@ function createGenreRadios() {
             input.setAttribute('name', 'genre')
             input.setAttribute('id', 'radio' + type)
             input.onclick = function () {
+                console.log('c')
                 filterGenre(type)
             }
             var label = document.createElement('label')
@@ -175,7 +204,7 @@ function createCalendar(month, year) {
 
     // create date picker
     var yearPicker = document.getElementById('year')
-    for (let yr = earliestYr; yr < latestYr+1; yr++) {
+    for (let yr = earliestYr; yr < latestYr + 1; yr++) {
         var option = document.createElement('option')
 
         option.setAttribute('value', yr)
@@ -255,8 +284,8 @@ function createCalendar(month, year) {
                             var tr = document.createElement('tr')
 
                             for (let i = 0; i < Object.keys(chosenEvent).length - 3; i++) {
-                                
-                                
+
+
                                 let td = document.createElement("td");
                                 // first column is date and needs styling 
                                 var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
@@ -329,7 +358,33 @@ function getEventsForMonth(month, year) {
 
 }
 
+function nextTablePage() {
 
+    //add next rows if there are them
+    if (allRowsIntoPages[currentPage + 1]) {
+        // remove current rows
+        var tbody = document.getElementById('tBodyBrowse')
+        tbody.replaceChildren()
+        currentPage++
+        allRowsIntoPages[currentPage].forEach((tr) => {
+            tbody.appendChild(tr)
+        })
+    }
+
+}
+
+function previousTablePage() {
+ //add previous rows if there are them
+ if (allRowsIntoPages[currentPage - 1]) {
+    // remove current rows
+    var tbody = document.getElementById('tBodyBrowse')
+    tbody.replaceChildren()
+    currentPage--
+    allRowsIntoPages[currentPage].forEach((tr) => {
+        tbody.appendChild(tr)
+    })
+}
+}
 
 
 function next() {
@@ -342,7 +397,7 @@ function next() {
         // also move month
         currentMonth = (currentMonth + 1) % 12;
     }
-    
+
     createCalendar(currentMonth, currentYear);
 }
 
@@ -429,6 +484,7 @@ function shorternDates(dates) {
 //  ----- filtering data
 
 function filterGenre(type) {
+
     var container = document.getElementById('showData')
     container.replaceChildren()
 
@@ -453,7 +509,7 @@ function browseAll() {
 
     // reset checkbox to displaying all entries
     document.getElementById('all').click()
-   
+
 
 }
 
