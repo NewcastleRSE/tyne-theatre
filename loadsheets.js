@@ -2,9 +2,15 @@ var allData;
 let today = new Date();
 let cols;
 
-// set starting month and year for calendar, not month is zero indexed
-let currentMonth = 0;
-let currentYear = 1867;
+// set starting month and year for calendar, note month is zero indexed
+let earliestYr = 1867
+let earliestMonth = 0
+let latestYr = 1919
+let latestMonth = 11
+
+let currentMonth = earliestMonth;
+let currentYear = earliestYr;
+
 // hide calendar and browsing
 $('#calendar').hide()
 $('#browse').hide()
@@ -100,7 +106,7 @@ function createTable(dataToDisplay) {
         let vals = Object.values(item);
 
         // Loop through the values and create table cells other than the final ID column
-        for (let i = 0; i < vals.length - 1; i++) {
+        for (let i = 0; i < vals.length - 2; i++) {
             let td = document.createElement("td");
             // first column is date and needs styling 
             if (i === 0) {
@@ -160,6 +166,7 @@ function createGenreRadios() {
 }
 
 function createCalendar(month, year) {
+
     let selectYear = document.getElementById("year");
     let selectMonth = document.getElementById("month");
 
@@ -167,7 +174,7 @@ function createCalendar(month, year) {
 
     // create date picker
     var yearPicker = document.getElementById('year')
-    for (let yr = 1867; yr < 1920; yr++) {
+    for (let yr = earliestYr; yr < latestYr+1; yr++) {
         var option = document.createElement('option')
 
         option.setAttribute('value', yr)
@@ -248,19 +255,19 @@ function createCalendar(month, year) {
 
                             for (let i = 0; i < Object.keys(chosenEvent).length - 2; i++) {
                                 // don't include colour id ID
-let td = document.createElement("td");
-                                 // first column is date and needs styling 
-                                 var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
-            if (i === 0) {
-                var formattedDates = shorternDates(innerText)
-                td.innerText = formattedDates; // Set the value as the text of the table cell
-            } else {
-                td.innerText = innerText; // Set the value as the text of the table cell
-            }
+                                let td = document.createElement("td");
+                                // first column is date and needs styling 
+                                var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
+                                if (i === 0) {
+                                    var formattedDates = shorternDates(innerText)
+                                    td.innerText = formattedDates; // Set the value as the text of the table cell
+                                } else {
+                                    td.innerText = innerText; // Set the value as the text of the table cell
+                                }
 
-                                
 
-                               
+
+
                                 tr.appendChild(td); // Append the table cell to the table row
 
 
@@ -324,14 +331,31 @@ function getEventsForMonth(month, year) {
 
 
 function next() {
+    // see if changing year would take it after the earliest
     currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
-    currentMonth = (currentMonth + 1) % 12;
+    if (currentYear > latestYr) {
+        //reset
+        currentYear = latestYr
+    } else {
+        // also move month
+        currentMonth = (currentMonth + 1) % 12;
+    }
+    
     createCalendar(currentMonth, currentYear);
 }
 
 function previous() {
+    // see if changing year would take it before the earliest
     currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
-    currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+
+    if (currentYear < earliestYr) {
+        //reset
+        currentYear = earliestYr
+    } else {
+        // also move month
+        currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+    }
+
     createCalendar(currentMonth, currentYear);
 }
 
@@ -364,7 +388,7 @@ function standardiseDataCol(data) {
         var dates = el.Date.split(";")
         // isolate date and convert to readable format
         var formattedDates = []
-        
+
         dates.forEach((d) => {
             // remove space
             d = d.trim()
@@ -391,13 +415,13 @@ function standardiseDataCol(data) {
 
 function shorternDates(dates) {
     var formatted = []
-    
+
     dates.split(',').forEach((d) => {
         d = new Date(d)
         formatted.push(d.toLocaleDateString())
-       
+
     })
-    return  formatted.join(', ')
+    return formatted.join(', ')
 }
 
 //  ----- filtering data
