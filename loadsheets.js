@@ -24,7 +24,6 @@ $(window).on('load', function () {
     const spreadhseet = '1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs'
     const sheet = 'newspaper1867'
 
-console.log('h')
 
 
 
@@ -44,7 +43,7 @@ console.log('h')
             parsedData = assignIDs(parsedData)
             allData = standardiseTypeCol(parsedData)
             allData = standardiseDataCol(allData)
-            console.log(allData)
+          
 
             // create radio buttons for genre
             createGenreRadios()
@@ -166,7 +165,12 @@ function createTable(dataToDisplay) {
 function createGenreRadios() {
 
     // get all possible genres from 'Type' column
-    var types = Object.keys(_.countBy(allData, function (data) { return data.Type; }))
+    var types = Object.keys(_.countBy(allData, function (data) { 
+        // strip anything in brackets
+        let type = data.Type.replace(/ *\([^)]*\) */g, "")
+        type = type.trim()
+        return type; 
+    }))
 
     types.forEach((type) => {
         // exclude blank
@@ -177,7 +181,6 @@ function createGenreRadios() {
             input.setAttribute('name', 'genre')
             input.setAttribute('id', 'radio' + type)
             input.onclick = function () {
-                console.log('c')
                 filterGenre(type)
             }
             var label = document.createElement('label')
@@ -445,7 +448,7 @@ function standardiseTypeCol(parsedData) {
 }
 
 function standardiseDataCol(data) {
-    console.log('hereh')
+
     // reformat date col to be human readable and create new machine readable column to use for calendar etc.
     data.forEach((el) => {
         // split into list based on ;
@@ -478,7 +481,7 @@ function standardiseDataCol(data) {
         el.Date = formattedDatesWithStrings.join(', ')
         el['datesformatted'] = formattedDates.join(', ')
     })
-console.log(data)
+
     return data
 }
 
@@ -511,7 +514,7 @@ function filterGenre(type) {
     } else {
 
         // select only entries where type is correct
-        var filteredData = _.filter(allData, function (o) { return o.Type === type; });
+        var filteredData = _.filter(allData, function (o) { return o.Type.startsWith(type); });
 
         createTable(filteredData)
     }
