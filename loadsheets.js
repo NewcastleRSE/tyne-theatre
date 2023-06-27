@@ -11,7 +11,7 @@ let latestMonth = 11
 let currentMonth = earliestMonth;
 let currentYear = earliestYr;
 
-let rowsToDisplay = 5
+let rowsToDisplay = 10
 let currentPage = 0
 let allRowsIntoPages = []
 
@@ -24,7 +24,8 @@ $(window).on('load', function () {
     const spreadhseet = '1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs'
     const sheet = 'newspaper1867'
 
-
+// set results card to invisible
+ $('#resultsCard').hide()
 
 
     //    Get data from sheets
@@ -78,6 +79,7 @@ function createTable(dataToDisplay) {
     let table = document.createElement("table");
     table.setAttribute('id', 'myTable')
     table.classList.add('table')
+    table.classList.add('table-hover')
 
 
     // Get the keys (column names) of the first object in the JSON data
@@ -130,7 +132,7 @@ function createTable(dataToDisplay) {
             // first column is date and needs styling 
             if (i === 0) {
                 var formattedDates = shorternDates(vals[i])
-                td.innerText = formattedDates; // Set the value as the text of the table cell
+                td.innerText = formattedDates.substring(0,11) + '...' // Set the value as the text of the table cell
             } else {
                 td.innerText = vals[i]; // Set the value as the text of the table cell
             }
@@ -141,6 +143,10 @@ function createTable(dataToDisplay) {
             }
 
             tr.appendChild(td); // Append the table cell to the table row
+            tr.style.cursor = 'pointer'
+            tr.onclick = function() {
+                displayEvent(item['ID'])
+            }
         }
 
         allHtmlRows.push(tr)
@@ -170,6 +176,84 @@ function createTable(dataToDisplay) {
 
 }
 
+// display single event above table view
+function displayEvent(id) {
+     // Get the container element where the table will be inserted
+     let container = document.getElementById("clickedEntry");
+ 
+     // Create the table element
+     let table = document.createElement("table");
+     table.setAttribute('id', 'resultTable')
+     table.classList.add('table')
+     
+     
+ 
+ 
+     // Get the keys (column names) of the first object in the JSON data
+     
+ 
+     // Create the header element
+     let thead = document.createElement("thead");
+     let tr = document.createElement("tr");
+ 
+     // Loop through the column names and create header cells
+     cols.forEach((item) => {
+         // ignore ID and checked by columns
+         if (item != 'ID' && !item.startsWith('Checked by?') && item != 'datesformatted') {
+             let th = document.createElement("th");
+             th.setAttribute('scope', 'col')
+             th.innerText = item; // Set the column name as the text of the header cell
+              
+             tr.appendChild(th); // Append the header cell to the header row
+         }
+ 
+     });
+ 
+ 
+ 
+ 
+     thead.appendChild(tr); // Append the header row to the header
+     table.append(thead) // Append the header to the table
+ 
+     let tbody = document.createElement('tbody')
+     tbody.setAttribute('id', 'tBodyResult')
+ 
+     // create table row
+    let item = _.find(allData, function(o) {return o.ID === id})
+    
+
+
+         let tr1 = document.createElement("tr");
+ 
+         // Get the values of the current object in the JSON data
+         let vals = Object.values(item);
+ console.log(vals)
+         // Loop through the values and create table cells other than the final ID column
+         for (let i = 0; i < vals.length - 4; i++) {
+             let td = document.createElement("td");
+             // first column is date and needs styling 
+             if (i === 0) {
+                 var formattedDates = shorternDates(vals[i])
+                 td.innerText = formattedDates// Set the value as the text of the table cell
+             } else {
+                 td.innerText = vals[i]; // Set the value as the text of the table cell
+             }
+ 
+            
+             tr1.appendChild(td); // Append the table cell to the table row
+            
+         }
+ 
+        
+         tbody.appendChild(tr1); // Append the table row to the table
+   
+     table.appendChild(tbody)
+     container.appendChild(table) // Append the table to the container element
+
+     // set results card to visible
+     $('#resultsCard').show()
+    
+}
 
 
 function createGenreRadios() {

@@ -70,6 +70,13 @@
                     <label class="form-check-label" for="all">All</label>
                 </div>
             </form>
+
+            <!-- Table to display selected result -->
+            <div class="card p-3" id="resultsCard">
+            <div class="table-responsive" id="clickedEntry">
+
+            </div>
+            </div>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
@@ -78,21 +85,27 @@
                     <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
                             class="fa fa-arrow-right"></i></button>
                 </div>
-             </div>
+            </div>
+            <hr>
+            <!-- Table to display all results (date abbrev. and title only) -->
+            
                 <div class="table-responsive" id="showData">
+                    
 
                 </div>
+       
 
-                <div class="text-center">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
-                            <i class="fa fa-arrow-left"></i></button>
-    
-                        <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
-                                class="fa fa-arrow-right"></i></button>
-                    </div>
-                 </div>
-           
+
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
+                        <i class="fa fa-arrow-left"></i></button>
+
+                    <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
+                            class="fa fa-arrow-right"></i></button>
+                </div>
+            </div>
+
 
         </div>
 
