@@ -3,97 +3,60 @@ Github Pages site to browse historical Tyne Theatre performances
 
 ## About
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin ante at eleifend eleifend. Sed non vestibulum nisi. Aliquam vel condimentum quam. Donec fringilla et purus at auctor. Praesent euismod vitae metus non consectetur. Sed interdum aliquet nisl at efficitur. Nulla urna quam, gravida eget elementum eget, mattis nec tortor. Fusce ut neque tellus. Integer at magna feugiat lacus porta posuere eget vitae metus.
+This site is designed to demonstrate code that takes the contents of Google Sheet and displays it for the user to browse and filter. The code is intended to be used within the Tyne Theatre website. This will involve Tyne Theatre's web developers to transfer the code. Styling and content is therefore kept to a minimum so that the Tyen Theatre staff and web developers can adapt as required. 
 
-Curabitur a tempus arcu. Maecenas blandit risus quam, quis convallis justo pretium in. Suspendisse rutrum, elit at venenatis cursus, dolor ligula iaculis dui, ut dignissim enim justo at ligula. Donec interdum dignissim egestas. Nullam nec ultrices enim. Nam quis arcu tincidunt, auctor purus sit amet, aliquam libero. Fusce rhoncus lectus ac imperdiet varius. Sed gravida urna eros, ac luctus justo condimentum nec. Integer ultrices nibh in neque sagittis, at pretium erat pretium. Praesent feugiat purus id iaculis laoreet. Proin in tellus tristique, congue ante in, sodales quam. Sed imperdiet est tortor, eget vestibulum tortor pulvinar volutpat. In et pretium nisl.
+The site currently makes minimal use of [Font Awesome](https://fontawesome.com/) for icons and [Bootstrap](https://getbootstrap.com/) for styling. These can be replaced with other libraries or frameworks as required. 
+
+The data is pulled from a Google Sheet stored on the Newcastle University RSE team's Google Drive. To enable access to a sheet:
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and enable the Google Sheets API for the relevant project (or create a new one)
+2. Create an API key. Store this key securely as you will need to append it to the API call
+3. Share the Google Sheet so that anyone with the link can view it
+4. Construct the API call as in the script in this repo. The Sheet ID can be found after `d/` in the sharing link Google provides. 
 
 ### Project Team
-Dr L. Ipsum, Newcastle University  ([lorem.ipsum@newcastle.ac.uk](mailto:lorem.ipsum@newcastle.ac.uk))  
-Professor D. Sit Amet, XY University  ([d.sit.amet@newcastle.ac.uk](mailto:d.sit.amet@example.com))  
+Dr Andrew Shail, Newcastle University  ([Andrew.Shail@newcastle.ac.uk](mailto:Andrew.Shail@newcastle.ac.uk))  
+  
 
 ### RSE Contact
-C. Adipiscing  
+Kate Court
 RSE Team  
 Newcastle University  
-([consectetur.adpiscing@newcastle.ac.uk](mailto:consectetur.adpiscing@newcastle.ac.uk))  
+([kate.court@newcastle.ac.uk](mailto:kate.court@newcastle.ac.uk))  
 
 ## Built With
 
-The site uses Jekyll to run locally and GitHub Pages to deploy.
+The site uses Jekyll to run locally and GitHub Pages to deploy. The HTML and JavaScript files can be lifted for transferring to the final website ([script](./loadsheets.js)) and ([template](./index.html)).
 
-After following the installation instructions [here](https://jekyllrb.com/docs/), run:
+## Getting Started
+
+### Installation
+
+Follow the installation instructions for Jekyll [here](https://jekyllrb.com/docs/).
+
+### Running Locally
+
+Run:
 
 ```
 bundle exec jekyll serve --livereload
 ```
 
-## Getting Started
-
-### Prerequisites
-
-Any tools or versions of languages needed to run code. For example specific Python or Node versions. Minimum hardware requirements also go here.
-
-### Installation
-
-How to build or install the applcation.
-
-### Running Locally
-
-How to run the application on your local system.
-
-### Running Tests
-
-How to run tests on your local system.
-
 ## Deployment
-
-### Local
-
-Deploying to a production style setup but on the local system. Examples of this would include `venv`, `anaconda`, `Docker` or `minikube`. 
 
 ### Production
 
-Deploying to the production system. Examples of this would include cloud, HPC or virtual machine. 
+Push changes to the main branch to trigger a new build.
 
 ## Usage
 
-Any links to production environment, video demos and screenshots.
+[https://newcastlerse.github.io/tyne-theatre/](https://newcastlerse.github.io/tyne-theatre/)
 
 ## Roadmap
 
-- [x] Initial Research  
-- [ ] Minimum viable product <-- You are Here  
+- [ ] Initial Research  
+- [ ] Minimum viable product  
 - [ ] Alpha Release  
-- [ ] Feature-Complete Release  
-
-## Contributing
-
-### Main Branch
-Protected and can only be pushed to via pull requests. Should be considered stable and a representation of production code.
-
-### Dev Branch
-Should be considered fragile, code should compile and run but features may be prone to errors.
-
-### Feature Branches
-A branch per feature being worked on.
-
-https://nvie.com/posts/a-successful-git-branching-model/
-
-## License
-
-## Citation
-
-Please cite the associated papers for this work if you use this code:
-
-```
-@article{xxx2023paper,
-  title={Title},
-  author={Author},
-  journal={arXiv},
-  year={2023}
-}
-```
+- [x] Feature-Complete Release  
 
 
-## Acknowledgements
-This work was funded by a grant from the UK Research Councils, EPSRC grant ref. EP/L012345/1, “Example project title, please update”.
+
