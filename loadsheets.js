@@ -1,4 +1,5 @@
 var allData;
+var displayedData
 let today = new Date();
 let cols;
 
@@ -18,14 +19,18 @@ let allRowsIntoPages = []
 // hide calendar and browsing
 $('#calendar').hide()
 $('#browse').hide()
+ $('#resultsCard').hide()
+ $('#searchBox').hide()
+ $('#dataTable').hide()
+
+
 $(window).on('load', function () {
 
     const sheets = 'AIzaSyCVD9iMwj55GMFScjorofPqY4bYD2s-3pg'
     const spreadhseet = '1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs'
     const sheet = 'newspaper1867'
 
-// set results card to invisible
- $('#resultsCard').hide()
+
 
 
     //    Get data from sheets
@@ -44,7 +49,7 @@ $(window).on('load', function () {
             parsedData = assignIDs(parsedData)
             allData = standardiseTypeCol(parsedData)
             allData = standardiseDataCol(allData)
-          
+            displayedData = allData
 
             // create radio buttons for genre
             createGenreRadios()
@@ -68,12 +73,17 @@ function assignIDs(data) {
 }
 
 function createTable(dataToDisplay) {
-
-    // Get the container element where the table will be inserted
+ 
+    // Get the container element where the table will be inserted and clear it
     let container = document.getElementById("showData");
+container.replaceChildren()
 
     // reset pages
     allRowsIntoPages = []
+
+    if (dataToDisplay.length>0) {
+
+  
 
     // Create the table element
     let table = document.createElement("table");
@@ -173,7 +183,7 @@ function createTable(dataToDisplay) {
 
     //     // tell DatabTables to add styling etc.
     // $('#myTable').DataTable();
-
+    }
 }
 
 // display single event above table view
@@ -596,7 +606,7 @@ function filterGenre(type) {
 
         // select only entries where type is correct
         var filteredData = _.filter(allData, function (o) { return o.Type.startsWith(type); });
-
+        displayedData = filteredData
         createTable(filteredData)
     }
 }
@@ -604,27 +614,84 @@ function filterGenre(type) {
 // -----
 
 function browseAll() {
-    // hide calendar
+
+    // hide calendar etc
     $('#calendar').hide()
     $('#browse').show()
     $('#welcomeText').hide()
+    $('#resultsCard').hide()
+    $('#searchBox').hide()
+    $('#dataTable').show()
 
     // reset checkbox to displaying all entries
     document.getElementById('all').click()
 
+    // reset data list
+    dataToDisplay = allData
+    
+    // create table fresh
+    createTable(allData)
 
 }
 
 function showCalendar() {
-    // hide browsing
+    // hide browsing etc
     $('#calendar').show()
     $('#browse').hide()
     $('#welcomeText').hide()
+    $('#resultsCard').hide()
+    $('#searchBox').hide()
+    $('#dataTable').hide()
+
+     // reset data list
+     dataToDisplay = allData
+    
+}
+
+function showSearch() {
+     // hide browsing etc
+     $('#calendar').hide()
+     $('#browse').hide()
+     $('#welcomeText').hide()
+     $('#resultsCard').hide()
+     $('#searchBox').show()
+     $('#dataTable').show()
+
+      // reset data list
+    dataToDisplay = allData
+    
+    // create table fresh
+    createTable(allData)
 }
 
 function closeResultsCard() {
     // clear results table and hide card
     document.getElementById('clickedEntry').replaceChildren()
     $('#resultsCard').hide()
+}
+
+function searchDisplayedData() {
+    let searchFor = document.getElementById('searchInput').value.toLowerCase()
+
+    // reset to displaying everything?
+
+    let results = []
+
+    // if there is text entered search
+    if (searchFor && searchFor.length > 0) {
+        // search title, writers, composers, company, director and cast columns
+        displayedData.forEach((entry) => {
+            var searchText = entry['Title'] + entry['Writers'] + entry['Composers'] + entry['Company'] + entry['Director'] + entry['Cast'] 
+            searchText = searchText.toLowerCase()
+        
+            if (searchText.includes(searchFor)) {
+                results.push(entry)
+            }
+        })
+    }  
+
+   
+    displayedData = results
+    createTable(results)
 }
 
