@@ -19,9 +19,9 @@ let allRowsIntoPages = []
 // hide calendar and browsing
 $('#calendar').hide()
 $('#browse').hide()
- $('#resultsCard').hide()
- $('#searchBox').hide()
- $('#dataTable').hide()
+$('#resultsCard').hide()
+$('#searchBox').hide()
+$('#dataTable').hide()
 
 
 $(window).on('load', function () {
@@ -73,194 +73,194 @@ function assignIDs(data) {
 }
 
 function createTable(dataToDisplay) {
- 
+
     // Get the container element where the table will be inserted and clear it
     let container = document.getElementById("showData");
-container.replaceChildren()
+    container.replaceChildren()
 
     // reset pages
     allRowsIntoPages = []
 
-    if (dataToDisplay.length>0) {
-
-  
-
-    // Create the table element
-    let table = document.createElement("table");
-    table.setAttribute('id', 'myTable')
-    table.classList.add('table')
-    table.classList.add('table-hover')
-
-
-    // Get the keys (column names) of the first object in the JSON data
-    cols = Object.keys(dataToDisplay[0]);
-
-
-    // Create the header element
-    let thead = document.createElement("thead");
-    let tr = document.createElement("tr");
-
-    // Loop through the column names and create header cells
-    cols.forEach((item) => {
-        // ignore ID and checked by columns
-        if (item != 'ID' && !item.startsWith('Checked by?') && item != 'datesformatted') {
-            let th = document.createElement("th");
-            th.setAttribute('scope', 'col')
-            th.innerText = item; // Set the column name as the text of the header cell
-             // hide all cols except date and title
-             
-        if (item !== 'Date' && item !== 'Title') {
-            th.style.display = 'none'
-        }
-            tr.appendChild(th); // Append the header cell to the header row
-        }
-
-       
-
-    });
+    if (dataToDisplay.length > 0) {
 
 
 
+        // Create the table element
+        let table = document.createElement("table");
+        table.setAttribute('id', 'myTable')
+        table.classList.add('table')
+        table.classList.add('table-hover')
 
-    thead.appendChild(tr); // Append the header row to the header
-    table.append(thead) // Append the header to the table
 
-    let tbody = document.createElement('tbody')
-    tbody.setAttribute('id', 'tBodyBrowse')
+        // Get the keys (column names) of the first object in the JSON data
+        cols = Object.keys(dataToDisplay[0]);
 
-    // Loop through the JSON data and create table rows
-    let allHtmlRows = []
-    dataToDisplay.forEach((item) => {
+
+        // Create the header element
+        let thead = document.createElement("thead");
         let tr = document.createElement("tr");
 
-        // Get the values of the current object in the JSON data
-        let vals = Object.values(item);
+        // Loop through the column names and create header cells
+        cols.forEach((item) => {
+            // ignore ID and checked by columns
+            if (item != 'ID' && !item.startsWith('Checked by?') && item != 'datesformatted') {
+                let th = document.createElement("th");
+                th.setAttribute('scope', 'col')
+                th.innerText = item; // Set the column name as the text of the header cell
+                // hide all cols except date and title
 
-        // Loop through the values and create table cells other than the final ID column
-        for (let i = 0; i < vals.length - 4; i++) {
-            let td = document.createElement("td");
-            // first column is date and needs styling 
-            if (i === 0) {
-                var formattedDates = shorternDates(vals[i])
-                td.innerText = formattedDates.substring(0,11) + '...' // Set the value as the text of the table cell
-            } else {
-                td.innerText = vals[i]; // Set the value as the text of the table cell
+                if (item !== 'Date' && item !== 'Title') {
+                    th.style.display = 'none'
+                }
+                tr.appendChild(th); // Append the header cell to the header row
             }
 
-            // hide everything but date and title
-            if (i !== 0 && i !== 1) {
-                td.style.display = 'none'
+
+
+        });
+
+
+
+
+        thead.appendChild(tr); // Append the header row to the header
+        table.append(thead) // Append the header to the table
+
+        let tbody = document.createElement('tbody')
+        tbody.setAttribute('id', 'tBodyBrowse')
+
+        // Loop through the JSON data and create table rows
+        let allHtmlRows = []
+        dataToDisplay.forEach((item) => {
+            let tr = document.createElement("tr");
+
+            // Get the values of the current object in the JSON data
+            let vals = Object.values(item);
+
+            // Loop through the values and create table cells other than the final ID column
+            for (let i = 0; i < vals.length - 4; i++) {
+                let td = document.createElement("td");
+                // first column is date and needs styling 
+                if (i === 0) {
+                    var formattedDates = shorternDates(vals[i])
+                    td.innerText = formattedDates.substring(0, 11) + '...' // Set the value as the text of the table cell
+                } else {
+                    td.innerText = vals[i]; // Set the value as the text of the table cell
+                }
+
+                // hide everything but date and title
+                if (i !== 0 && i !== 1) {
+                    td.style.display = 'none'
+                }
+
+                tr.appendChild(td); // Append the table cell to the table row
+                tr.style.cursor = 'pointer'
+                tr.onclick = function () {
+                    displayEvent(item['ID'])
+                }
             }
 
-            tr.appendChild(td); // Append the table cell to the table row
-            tr.style.cursor = 'pointer'
-            tr.onclick = function() {
-                displayEvent(item['ID'])
-            }
+            allHtmlRows.push(tr)
+            //tbody.appendChild(tr); // Append the table row to the table
+        });
+
+
+        // divide rows into pages
+
+        while (allHtmlRows.length > 0) {
+            // remove first n elements and add to page
+            const nextPage = allHtmlRows.splice(0, rowsToDisplay)
+            allRowsIntoPages.push(nextPage)
         }
 
-        allHtmlRows.push(tr)
-        //tbody.appendChild(tr); // Append the table row to the table
-    });
+        // display first page
+        allRowsIntoPages[0].forEach((tr) => {
+            tbody.appendChild(tr)
+        })
 
 
-    // divide rows into pages
+        table.appendChild(tbody)
+        container.appendChild(table) // Append the table to the container element
 
-    while (allHtmlRows.length > 0) {
-        // remove first n elements and add to page
-        const nextPage = allHtmlRows.splice(0, rowsToDisplay)
-        allRowsIntoPages.push(nextPage)
-    }
-
-    // display first page
-    allRowsIntoPages[0].forEach((tr) => {
-        tbody.appendChild(tr)
-    })
-
-
-    table.appendChild(tbody)
-    container.appendChild(table) // Append the table to the container element
-
-    //     // tell DatabTables to add styling etc.
-    // $('#myTable').DataTable();
+        //     // tell DatabTables to add styling etc.
+        // $('#myTable').DataTable();
     }
 }
 
 // display single event above table view
 function displayEvent(id) {
 
-    
 
-     // Get the container element where the table will be inserted
-     let container = document.getElementById("clickedEntry");
- 
-// clear previous results entry if there is one
-  container.replaceChildren()
 
-     // Create the table element
-     let table = document.createElement("table");
-     table.setAttribute('id', 'resultTable')
-     table.classList.add('table')
-     
-     
- 
- 
-     // Get the keys (column names) of the first object in the JSON data
-     
- 
-     // Create the header element
+    // Get the container element where the table will be inserted
+    let container = document.getElementById("clickedEntry");
 
- let tbody = document.createElement('tbody')
-     tbody.setAttribute('id', 'tBodyResult')
+    // clear previous results entry if there is one
+    container.replaceChildren()
 
-     // Loop through the column names and create header cells and data cell
-     let item = _.find(allData, function(o) {return o.ID === id})
-    
-     Object.keys(item).forEach((key) => {
-       
-         // ignore ID and checked by columns
-         if (key != 'ID' && !key.startsWith('Checked by?') && key != 'datesformatted') {
+    // Create the table element
+    let table = document.createElement("table");
+    table.setAttribute('id', 'resultTable')
+    table.classList.add('table')
+
+
+
+
+    // Get the keys (column names) of the first object in the JSON data
+
+
+    // Create the header element
+
+    let tbody = document.createElement('tbody')
+    tbody.setAttribute('id', 'tBodyResult')
+
+    // Loop through the column names and create header cells and data cell
+    let item = _.find(allData, function (o) { return o.ID === id })
+
+    Object.keys(item).forEach((key) => {
+
+        // ignore ID and checked by columns
+        if (key != 'ID' && !key.startsWith('Checked by?') && key != 'datesformatted') {
             // row per object key
             let tr = document.createElement("tr");
             // header is key
             let th = document.createElement("th");
-             th.setAttribute('scope', 'col')
-             th.innerText = key; // Set the column name as the text of the header cell
-             // contents of next cell is value
-             let td = document.createElement("td");
-               // first column is date and needs styling 
-             if (key === 'Date') {
+            th.setAttribute('scope', 'col')
+            th.innerText = key; // Set the column name as the text of the header cell
+            // contents of next cell is value
+            let td = document.createElement("td");
+            // first column is date and needs styling 
+            if (key === 'Date') {
                 var formattedDates = shorternDates(item[key])
                 td.innerText = formattedDates// Set the value as the text of the table cell
             } else {
                 td.innerText = item[key]; // Set the value as the text of the table cell
             }
-             tr.appendChild(th); // Append the header cell to the header row
-             tr.appendChild(td)
-             tbody.appendChild(tr)
-         }
-  
-     });
- 
- 
-   
-     table.appendChild(tbody)
-     container.appendChild(table) // Append the table to the container element
+            tr.appendChild(th); // Append the header cell to the header row
+            tr.appendChild(td)
+            tbody.appendChild(tr)
+        }
 
-     // set results card to visible
-     $('#resultsCard').show()
-    
+    });
+
+
+
+    table.appendChild(tbody)
+    container.appendChild(table) // Append the table to the container element
+
+    // set results card to visible
+    $('#resultsCard').show()
+
 }
 
 
 function createGenreRadios() {
 
     // get all possible genres from 'Type' column
-    var types = Object.keys(_.countBy(allData, function (data) { 
+    var types = Object.keys(_.countBy(allData, function (data) {
         // strip anything in brackets
         let type = data.Type.replace(/ *\([^)]*\) */g, "")
         type = type.trim()
-        return type; 
+        return type;
     }))
 
     types.forEach((type) => {
@@ -473,16 +473,16 @@ function nextTablePage() {
 }
 
 function previousTablePage() {
- //add previous rows if there are them
- if (allRowsIntoPages[currentPage - 1]) {
-    // remove current rows
-    var tbody = document.getElementById('tBodyBrowse')
-    tbody.replaceChildren()
-    currentPage--
-    allRowsIntoPages[currentPage].forEach((tr) => {
-        tbody.appendChild(tr)
-    })
-}
+    //add previous rows if there are them
+    if (allRowsIntoPages[currentPage - 1]) {
+        // remove current rows
+        var tbody = document.getElementById('tBodyBrowse')
+        tbody.replaceChildren()
+        currentPage--
+        allRowsIntoPages[currentPage].forEach((tr) => {
+            tbody.appendChild(tr)
+        })
+    }
 }
 
 
@@ -587,7 +587,7 @@ function shorternDates(dates) {
         } else {
             formatted.push(d.toLocaleDateString())
         }
-        
+
 
     })
     return formatted.join(', ')
@@ -628,7 +628,7 @@ function browseAll() {
 
     // reset data list
     dataToDisplay = allData
-    
+
     // create table fresh
     createTable(allData)
 
@@ -643,23 +643,23 @@ function showCalendar() {
     $('#searchBox').hide()
     $('#dataTable').hide()
 
-     // reset data list
-     dataToDisplay = allData
-    
+    // reset data list
+    dataToDisplay = allData
+
 }
 
 function showSearch() {
-     // hide browsing etc
-     $('#calendar').hide()
-     $('#browse').hide()
-     $('#welcomeText').hide()
-     $('#resultsCard').hide()
-     $('#searchBox').show()
-     $('#dataTable').show()
+    // hide browsing etc
+    $('#calendar').hide()
+    $('#browse').hide()
+    $('#welcomeText').hide()
+    $('#resultsCard').hide()
+    $('#searchBox').show()
+    $('#dataTable').show()
 
-      // reset data list
+    // reset data list
     dataToDisplay = allData
-    
+
     // create table fresh
     createTable(allData)
 }
@@ -681,17 +681,23 @@ function searchDisplayedData() {
     if (searchFor && searchFor.length > 0) {
         // search title, writers, composers, company, director and cast columns
         displayedData.forEach((entry) => {
-            var searchText = entry['Title'] + entry['Writers'] + entry['Composers'] + entry['Company'] + entry['Director'] + entry['Cast'] 
+            var searchText = entry['Title'] + entry['Writers'] + entry['Composers'] + entry['Company'] + entry['Director'] + entry['Cast']
             searchText = searchText.toLowerCase()
-        
+
             if (searchText.includes(searchFor)) {
                 results.push(entry)
             }
         })
-    }  
+        displayedData = results
+        createTable(results)
+    }
 
-   
-    displayedData = results
-    createTable(results)
+
+
+}
+
+function clearSearch() {
+    document.getElementById('searchInput').value = ''
+    createTable(allData)
 }
 
