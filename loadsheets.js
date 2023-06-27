@@ -95,8 +95,15 @@ function createTable(dataToDisplay) {
             let th = document.createElement("th");
             th.setAttribute('scope', 'col')
             th.innerText = item; // Set the column name as the text of the header cell
+             // hide all cols except date and title
+             
+        if (item !== 'Date' && item !== 'Title') {
+            th.style.display = 'none'
+        }
             tr.appendChild(th); // Append the header cell to the header row
         }
+
+       
 
     });
 
@@ -128,7 +135,10 @@ function createTable(dataToDisplay) {
                 td.innerText = vals[i]; // Set the value as the text of the table cell
             }
 
-
+            // hide everything but date and title
+            if (i !== 0 && i !== 1) {
+                td.style.display = 'none'
+            }
 
             tr.appendChild(td); // Append the table cell to the table row
         }
