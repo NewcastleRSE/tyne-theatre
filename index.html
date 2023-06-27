@@ -72,7 +72,9 @@
             </form>
 
             <!-- Table to display selected result -->
-            <div class="card p-3" id="resultsCard">
+            <div class="card p-3 mt-4 mb-4" id="resultsCard">
+                <button id="resultsCardClose " onclick="closeResultsCard()"  type="button" class="btn-close " aria-label="Close"></button>
+                
             <div class="table-responsive" id="clickedEntry">
 
             </div>
@@ -86,7 +88,7 @@
                             class="fa fa-arrow-right"></i></button>
                 </div>
             </div>
-            <hr>
+      
             <!-- Table to display all results (date abbrev. and title only) -->
             
                 <div class="table-responsive" id="showData">

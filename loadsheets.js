@@ -178,9 +178,15 @@ function createTable(dataToDisplay) {
 
 // display single event above table view
 function displayEvent(id) {
+
+    
+
      // Get the container element where the table will be inserted
      let container = document.getElementById("clickedEntry");
  
+// clear previous results entry if there is one
+  container.replaceChildren()
+
      // Create the table element
      let table = document.createElement("table");
      table.setAttribute('id', 'resultTable')
@@ -193,59 +199,40 @@ function displayEvent(id) {
      
  
      // Create the header element
-     let thead = document.createElement("thead");
-     let tr = document.createElement("tr");
- 
-     // Loop through the column names and create header cells
-     cols.forEach((item) => {
+
+ let tbody = document.createElement('tbody')
+     tbody.setAttribute('id', 'tBodyResult')
+
+     // Loop through the column names and create header cells and data cell
+     let item = _.find(allData, function(o) {return o.ID === id})
+    
+     Object.keys(item).forEach((key) => {
+       
          // ignore ID and checked by columns
-         if (item != 'ID' && !item.startsWith('Checked by?') && item != 'datesformatted') {
-             let th = document.createElement("th");
+         if (key != 'ID' && !key.startsWith('Checked by?') && key != 'datesformatted') {
+            // row per object key
+            let tr = document.createElement("tr");
+            // header is key
+            let th = document.createElement("th");
              th.setAttribute('scope', 'col')
-             th.innerText = item; // Set the column name as the text of the header cell
-              
+             th.innerText = key; // Set the column name as the text of the header cell
+             // contents of next cell is value
+             let td = document.createElement("td");
+               // first column is date and needs styling 
+             if (key === 'Date') {
+                var formattedDates = shorternDates(item[key])
+                td.innerText = formattedDates// Set the value as the text of the table cell
+            } else {
+                td.innerText = item[key]; // Set the value as the text of the table cell
+            }
              tr.appendChild(th); // Append the header cell to the header row
+             tr.appendChild(td)
+             tbody.appendChild(tr)
          }
- 
+  
      });
  
  
- 
- 
-     thead.appendChild(tr); // Append the header row to the header
-     table.append(thead) // Append the header to the table
- 
-     let tbody = document.createElement('tbody')
-     tbody.setAttribute('id', 'tBodyResult')
- 
-     // create table row
-    let item = _.find(allData, function(o) {return o.ID === id})
-    
-
-
-         let tr1 = document.createElement("tr");
- 
-         // Get the values of the current object in the JSON data
-         let vals = Object.values(item);
- console.log(vals)
-         // Loop through the values and create table cells other than the final ID column
-         for (let i = 0; i < vals.length - 4; i++) {
-             let td = document.createElement("td");
-             // first column is date and needs styling 
-             if (i === 0) {
-                 var formattedDates = shorternDates(vals[i])
-                 td.innerText = formattedDates// Set the value as the text of the table cell
-             } else {
-                 td.innerText = vals[i]; // Set the value as the text of the table cell
-             }
- 
-            
-             tr1.appendChild(td); // Append the table cell to the table row
-            
-         }
- 
-        
-         tbody.appendChild(tr1); // Append the table row to the table
    
      table.appendChild(tbody)
      container.appendChild(table) // Append the table to the container element
@@ -633,5 +620,11 @@ function showCalendar() {
     $('#calendar').show()
     $('#browse').hide()
     $('#welcomeText').hide()
+}
+
+function closeResultsCard() {
+    // clear results table and hide card
+    document.getElementById('clickedEntry').replaceChildren()
+    $('#resultsCard').hide()
 }
 
