@@ -24,7 +24,7 @@ $(window).on('load', function () {
     const spreadhseet = '1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs'
     const sheet = 'newspaper1867'
 
-
+console.log('h')
 
 
 
@@ -44,6 +44,7 @@ $(window).on('load', function () {
             parsedData = assignIDs(parsedData)
             allData = standardiseTypeCol(parsedData)
             allData = standardiseDataCol(allData)
+            console.log(allData)
 
             // create radio buttons for genre
             createGenreRadios()
@@ -91,7 +92,7 @@ function createTable(dataToDisplay) {
     // Loop through the column names and create header cells
     cols.forEach((item) => {
         // ignore ID and checked by columns
-        if (item != 'ID' && !item.startsWith('Checked by?')) {
+        if (item != 'ID' && !item.startsWith('Checked by?') && item != 'datesformatted') {
             let th = document.createElement("th");
             th.setAttribute('scope', 'col')
             th.innerText = item; // Set the column name as the text of the header cell
@@ -118,7 +119,7 @@ function createTable(dataToDisplay) {
         let vals = Object.values(item);
 
         // Loop through the values and create table cells other than the final ID column
-        for (let i = 0; i < vals.length - 3; i++) {
+        for (let i = 0; i < vals.length - 4; i++) {
             let td = document.createElement("td");
             // first column is date and needs styling 
             if (i === 0) {
@@ -159,6 +160,8 @@ function createTable(dataToDisplay) {
     // $('#myTable').DataTable();
 
 }
+
+
 
 function createGenreRadios() {
 
@@ -283,7 +286,7 @@ function createCalendar(month, year) {
 
                             var tr = document.createElement('tr')
 
-                            for (let i = 0; i < Object.keys(chosenEvent).length - 3; i++) {
+                            for (let i = 0; i < Object.keys(chosenEvent).length - 4; i++) {
 
 
                                 let td = document.createElement("td");
@@ -325,6 +328,8 @@ function createCalendar(month, year) {
 
 }
 
+
+
 // note expects month to be zero indexed e.g. January = 0
 function getEventsForMonth(month, year) {
     var events = []
@@ -339,7 +344,7 @@ function getEventsForMonth(month, year) {
             currentColour = 0
         }
 
-        var dates = entry.Date.split(',')
+        var dates = entry.datesformatted.split(',')
 
         for (let index = 0; index < dates.length; index++) {
             var date = new Date(dates[index])
@@ -440,16 +445,21 @@ function standardiseTypeCol(parsedData) {
 }
 
 function standardiseDataCol(data) {
+    console.log('hereh')
+    // reformat date col to be human readable and create new machine readable column to use for calendar etc.
     data.forEach((el) => {
         // split into list based on ;
         var dates = el.Date.split(";")
         // isolate date and convert to readable format
         var formattedDates = []
+        // convert date to readable format but preserve day and matinee information
+        var formattedDatesWithStrings = []
 
         dates.forEach((d) => {
             // remove space
             d = d.trim()
             var dateIsolated = d.substring(0, 9)
+            var restOfDate = d.substring(9)
 
             var yr = dateIsolated.substring(0, 4)
             var month = dateIsolated.substring(4, 6) - 1
@@ -462,11 +472,13 @@ function standardiseDataCol(data) {
             var date = new Date(yr, month, day)
 
             formattedDates.push(date.toDateString())
+            formattedDatesWithStrings.push(date.toDateString() + ' ' + restOfDate)
         })
 
-        el.Date = formattedDates.join(', ')
+        el.Date = formattedDatesWithStrings.join(', ')
+        el['datesformatted'] = formattedDates.join(', ')
     })
-
+console.log(data)
     return data
 }
 
@@ -474,8 +486,14 @@ function shorternDates(dates) {
     var formatted = []
 
     dates.split(',').forEach((d) => {
-        d = new Date(d)
-        formatted.push(d.toLocaleDateString())
+        var partsOfDate = d.split(' - ')
+        d = new Date(partsOfDate[0])
+        if (partsOfDate[1]) {
+            formatted.push(d.toLocaleDateString() + ' - ' + partsOfDate[1])
+        } else {
+            formatted.push(d.toLocaleDateString())
+        }
+        
 
     })
     return formatted.join(', ')
