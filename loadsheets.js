@@ -12,7 +12,7 @@ let latestMonth = 11
 let currentMonth = earliestMonth;
 let currentYear = earliestYr;
 
-let rowsToDisplay = 10
+let rowsToDisplay = 20
 let currentPage = 0
 let allRowsIntoPages = []
 
@@ -31,14 +31,13 @@ $(window).on('load', function () {
     const sheet = 'newspaper1867'
 
 
-
+    https://docs.google.com/spreadsheets/d/1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs/edit?usp=sharing
 
     //    Get data from sheets
     $.getJSON(
         "https://sheets.googleapis.com/v4/spreadsheets/1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs/values/sheet1?key=" + sheets,
 
         (data) => {
-
 
 
             // parse data from Sheets API into JSON
@@ -112,6 +111,8 @@ function createTable(dataToDisplay) {
                 if (item !== 'Date' && item !== 'Title') {
                     th.style.display = 'none'
                 }
+                
+
                 tr.appendChild(th); // Append the header cell to the header row
             }
 
@@ -250,6 +251,9 @@ function displayEvent(id) {
     // set results card to visible
     $('#resultsCard').show()
 
+    // scroll to results card
+    document.getElementById('resultsCard').scrollIntoView()
+
 }
 
 
@@ -257,15 +261,19 @@ function createGenreRadios() {
 
     // get all possible genres from 'Type' column
     var types = Object.keys(_.countBy(allData, function (data) {
-        // strip anything in brackets
+        if (data.Type) {
+             // strip anything in rounded or square brackets
         let type = data.Type.replace(/ *\([^)]*\) */g, "")
+        type = type.replace(/ *\[[^\]]*]/, '')
         type = type.trim()
         return type;
+        }
+       
     }))
 
     types.forEach((type) => {
         // exclude blank
-        if (type != '') {
+        if (type != '' && type != undefined) {
             var input = document.createElement('input')
             input.classList.add('form-check-input')
             input.setAttribute('type', 'radio')
@@ -530,10 +538,14 @@ function jump() {
 function standardiseTypeCol(parsedData) {
 
     parsedData.forEach((el) => {
+       
         // only first letter should be upper case and remove spaces at start or end
+       if (el.Type) {
         el.Type = el.Type.trim()
         el.Type = el.Type.toLowerCase()
         el.Type = el.Type.charAt(0).toUpperCase() + el.Type.slice(1)
+       }
+        
     })
     return parsedData
 }
@@ -550,6 +562,7 @@ function standardiseDataCol(data) {
         var formattedDatesWithStrings = []
 
         dates.forEach((d) => {
+        
             // remove space
             d = d.trim()
             var dateIsolated = d.substring(0, 9)
@@ -562,11 +575,19 @@ function standardiseDataCol(data) {
             if (day[0] === 0) {
                 day = day[1]
             }
+            
+                var date = new Date(yr, month, day)
 
-            var date = new Date(yr, month, day)
+                if (!isValidDate(date) || date.toDateString() === 'Invalid Date') {
+                    console.log('problem with date: ')
+                    console.log(d)
+                    console.log(dateIsolated)
+                } else {
 
-            formattedDates.push(date.toDateString())
-            formattedDatesWithStrings.push(date.toDateString() + ' ' + restOfDate)
+                formattedDates.push(date.toDateString())
+            formattedDatesWithStrings.push(date.toDateString() + ' ' + restOfDate) 
+                } 
+           
         })
 
         el.Date = formattedDatesWithStrings.join(', ')
@@ -576,18 +597,38 @@ function standardiseDataCol(data) {
     return data
 }
 
+function isValidDate(dateObject){
+    return new Date(dateObject).toString() !== 'Invalid Date';
+}
+
 function shorternDates(dates) {
     var formatted = []
 
+    
+
     dates.split(',').forEach((d) => {
-        var partsOfDate = d.split(' - ')
-        d = new Date(partsOfDate[0])
-        if (partsOfDate[1]) {
-            formatted.push(d.toLocaleDateString() + ' - ' + partsOfDate[1])
-        } else {
-            formatted.push(d.toLocaleDateString())
+        let partsOfDate = []
+        // dates are either split by en dash (short) or or em dash (long) so replace with simple dashes
+        let dTidied = d.replace(/\u2013|\u2014/g, "-")
+            partsOfDate = dTidied.split('-')
+       
+        if (partsOfDate.length > 0) {
+             df = new Date(partsOfDate[0])
+
+        if (!isValidDate(df)) {
+            console.log('problem shortening date')
+            
+            console.log(partsOfDate[0])
+            console.log(partsOfDate[1])
         }
 
+        if (partsOfDate[1]) {
+            formatted.push(df.toLocaleDateString() + ' - ' + partsOfDate[1])
+        } else {
+            formatted.push(df.toLocaleDateString())
+        }
+        }
+       
 
     })
     return formatted.join(', ')
@@ -605,7 +646,13 @@ function filterGenre(type) {
     } else {
 
         // select only entries where type is correct
-        var filteredData = _.filter(allData, function (o) { return o.Type.startsWith(type); });
+        
+        var filteredData = _.filter(allData, function (o) { 
+            if (o.Type) {
+                 return o.Type.startsWith(type); 
+            }
+           
+        });
         displayedData = filteredData
         createTable(filteredData)
     }
