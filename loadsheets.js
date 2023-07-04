@@ -451,7 +451,9 @@ function getEventsForMonth(month, year) {
 
         for (let index = 0; index < dates.length; index++) {
             var date = new Date(dates[index])
+          
             if (date.getFullYear() === year && date.getMonth() === month) {
+             
                 var obj = {}
                 entry['colour'] = colours[currentColour]
                 obj[date] = entry
@@ -618,9 +620,8 @@ function shorternDates(dates) {
 
         if (!isValidDate(df)) {
             console.log('problem shortening date')
-            
             console.log(partsOfDate[0])
-            console.log(partsOfDate[1])
+       
         }
 
         if (partsOfDate[1]) {
@@ -744,6 +745,7 @@ function searchDisplayedData() {
             }
         })
         displayedData = results
+       
         createTable(results)
     }
 
