@@ -158,6 +158,7 @@ function createTable(dataToDisplay) {
                 tr.onclick = function () {
                     displayEvent(item['ID'])
                 }
+               
             }
 
             allHtmlRows.push(tr)
@@ -715,6 +716,13 @@ function closeResultsCard() {
     // clear results table and hide card
     document.getElementById('clickedEntry').replaceChildren()
     $('#resultsCard').hide()
+}
+
+function searchIfEnter(e) {
+if (e.keyCode === 13) {
+    e.preventDefault()
+    searchDisplayedData()
+}
 }
 
 function searchDisplayedData() {
