@@ -5,7 +5,7 @@ let cols;
 
 // set starting month and year for calendar, note month is zero indexed
 let earliestYr = 1867
-let earliestMonth = 0
+let earliestMonth = 8
 let latestYr = 1919
 let latestMonth = 11
 
@@ -259,7 +259,7 @@ function displayEvent(id) {
 
 
 function createGenreRadios() {
-
+console.log('create')
     // get all possible genres from 'Type' column
     var types = Object.keys(_.countBy(allData, function (data) {
         if (data.Type) {
@@ -272,9 +272,15 @@ function createGenreRadios() {
        
     }))
 
-    types.forEach((type) => {
+    // case insensitive alphabetical sort
+    var typesSorted = types.sort((a, b) => {
+        return a.localeCompare(b, undefined, {sensitivity: 'base'});
+      });
+    console.log(typesSorted)
+
+    typesSorted.forEach((type) => {
         // exclude blank
-        if (type != '' && type != undefined) {
+        if (type != '' && type != undefined && type != 'undefined' ) {
             var input = document.createElement('input')
             input.classList.add('form-check-input')
             input.setAttribute('type', 'radio')
