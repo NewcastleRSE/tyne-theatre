@@ -221,7 +221,7 @@ function displayEvent(id) {
     Object.keys(item).forEach((key) => {
 
         // ignore ID and checked by columns
-        if (key != 'ID' && !key.startsWith('Checked by?') && key != 'datesformatted') {
+        if (key != 'ID' && !key.startsWith('Checked by?') && key != 'datesformatted' && key !== 'colour') {
             // row per object key
             let tr = document.createElement("tr");
             // header is key
@@ -386,38 +386,38 @@ function createCalendar(month, year) {
                         icon.setAttribute('style', 'color: ' + e[Object.keys(e)[0]]['colour'] + '; cursor: pointer;')
 
                         icon.onclick = function () {
+                                displayEvent(eventID)
+                        //     var chosenEvent = _.find(allData, function (o) { return o['ID'] === eventID })
+                        //     // build event
+                        //     var tbody = document.getElementById('calTableBody')
+                        //     // clear current table contents
+                        //     tbody.replaceChildren()
 
-                            var chosenEvent = _.find(allData, function (o) { return o['ID'] === eventID })
-                            // build event
-                            var tbody = document.getElementById('calTableBody')
-                            // clear current table contents
-                            tbody.replaceChildren()
+                        //     var tr = document.createElement('tr')
 
-                            var tr = document.createElement('tr')
-
-                            for (let i = 0; i < Object.keys(chosenEvent).length - 4; i++) {
-
-
-                                let td = document.createElement("td");
-                                // first column is date and needs styling 
-                                var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
-                                if (i === 0) {
-                                    var formattedDates = shorternDates(innerText)
-                                    td.innerText = formattedDates; // Set the value as the text of the table cell
-                                } else {
-                                    td.innerText = innerText; // Set the value as the text of the table cell
-                                }
+                        //     for (let i = 0; i < Object.keys(chosenEvent).length - 4; i++) {
 
 
-
-
-                                tr.appendChild(td); // Append the table cell to the table row
+                        //         let td = document.createElement("td");
+                        //         // first column is date and needs styling 
+                        //         var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
+                        //         if (i === 0) {
+                        //             var formattedDates = shorternDates(innerText)
+                        //             td.innerText = formattedDates; // Set the value as the text of the table cell
+                        //         } else {
+                        //             td.innerText = innerText; // Set the value as the text of the table cell
+                        //         }
 
 
 
-                            }
 
-                            tbody.appendChild(tr); // Append the table row to the table
+                        //         tr.appendChild(td); // Append the table cell to the table row
+
+
+
+                        //     }
+
+                        //     tbody.appendChild(tr); // Append the table row to the table
 
 
                         }

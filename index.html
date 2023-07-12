@@ -86,48 +86,7 @@
 
         </div>
 
-        <!-- Table to display selected result -->
-        <div class="card p-3 mt-4 mb-4" id="resultsCard">
-            <button id="resultsCardClose " onclick="closeResultsCard()" type="button" class="btn-close "
-                aria-label="Close"></button>
-
-            <div class="table-responsive" id="clickedEntry">
-
-            </div>
-        </div>
-
-        <!-- Table to display all results (date abbrev. and title only) -->
-        <div id="dataTable">
-            <div class="text-center">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
-                        <i class="fa fa-arrow-left"></i></button>
-
-                    <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
-                            class="fa fa-arrow-right"></i></button>
-                </div>
-            </div>
-            <div class="table-responsive" id="showData">
-
-
-            </div>
-
-
-
-            <div class="text-center">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
-                        <i class="fa fa-arrow-left"></i></button>
-
-                    <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
-                            class="fa fa-arrow-right"></i></button>
-                </div>
-            </div>
-
-
-        </div>
-
-        <!-- Calendar -->
+         <!-- Calendar -->
         <!-- https://github.com/niinpatel/calendarHTML-Javascript/tree/master -->
         <div id="calendar">
             <h3>Browse by date</h3>
@@ -210,7 +169,7 @@
                     </div>
                 </div>
             </div>
-            <div id="showInfo" class="table-responsive">
+            <!-- <div id="showInfo" class="table-responsive">
                 <table id="calTable" class="table mt-5">
                     <thead>
                         <th scope="col">
@@ -266,8 +225,51 @@
 
                     </tbody>
                 </table>
+            </div> -->
+        </div>
+
+        <!-- Table to display selected result -->
+        <div class="card p-3 mt-4 mb-4" id="resultsCard">
+            <button id="resultsCardClose " onclick="closeResultsCard()" type="button" class="btn-close "
+                aria-label="Close"></button>
+
+            <div class="table-responsive" id="clickedEntry">
+
             </div>
         </div>
+
+        <!-- Table to display all results (date abbrev. and title only) -->
+        <div id="dataTable">
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
+                        <i class="fa fa-arrow-left"></i></button>
+
+                    <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
+                            class="fa fa-arrow-right"></i></button>
+                </div>
+            </div>
+            <div class="table-responsive" id="showData">
+
+
+            </div>
+
+
+
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn  " id="previous" onclick="previousTablePage()">
+                        <i class="fa fa-arrow-left"></i></button>
+
+                    <button type="button" class="btn " id="next" onclick="nextTablePage()"><i
+                            class="fa fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+
+        </div>
+
+       
 
 
 
