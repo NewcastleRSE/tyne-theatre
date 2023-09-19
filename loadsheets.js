@@ -743,8 +743,7 @@ function searchDisplayedData() {
     if (searchFor && searchFor.length > 0) {
         // search title, writers, composers, company, director and cast columns
         displayedData.forEach((entry) => {
-            var searchText = entry['Title'] + entry['Writers'] + entry['Composers'] + entry['Company'] + entry['Director'] + entry['Cast']
-            searchText = searchText.toLowerCase()
+            var searchText = (entry['Title'] + entry['Writers'] + entry['Composers'] + entry['Company'] + entry['Director'] + entry['Cast']).toString().toLowerCase()
 
             if (searchText.includes(searchFor)) {
                 results.push(entry)
