@@ -734,6 +734,7 @@ if (e.keyCode === 13) {
 
 function searchDisplayedData() {
     let searchFor = document.getElementById('searchInput').value.toLowerCase()
+    displayedData = allData
 
     // reset to displaying everything?
 
