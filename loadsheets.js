@@ -754,6 +754,9 @@ function searchDisplayedData() {
        
         createTable(results)
     }
+    else {
+        createTable(allData)
+    }
 
 
 
