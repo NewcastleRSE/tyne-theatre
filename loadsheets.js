@@ -30,7 +30,6 @@ $(window).on('load', function () {
     const spreadhseet = '1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs'
     const sheet = 'newspaper1867'
 
-
     https://docs.google.com/spreadsheets/d/1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs/edit?usp=sharing
 
     //    Get data from sheets
@@ -38,8 +37,6 @@ $(window).on('load', function () {
         "https://sheets.googleapis.com/v4/spreadsheets/1xylPWSG2CSaEi_-TBdBTaiNUYhVEKTNLj3MyYKc65hs/values/sheet1?key=" + sheets,
 
         (data) => {
-
-
             // parse data from Sheets API into JSON
             var parsedData = Papa.parse(Papa.unparse(data['values']), { header: true }).data
 
@@ -57,9 +54,7 @@ $(window).on('load', function () {
             createTable(allData)
             createCalendar(currentMonth, currentYear);
         }
-
     )
-
 })
 
 // give each table row a unique ID
@@ -67,7 +62,6 @@ function assignIDs(data) {
     for (let index = 0; index < data.length; index++) {
         data[index]['ID'] = index
     }
-
     return data
 }
 
@@ -82,18 +76,14 @@ function createTable(dataToDisplay) {
 
     if (dataToDisplay.length > 0) {
 
-
-
         // Create the table element
         let table = document.createElement("table");
         table.setAttribute('id', 'myTable')
         table.classList.add('table')
         table.classList.add('table-hover')
 
-
         // Get the keys (column names) of the first object in the JSON data
         cols = Object.keys(dataToDisplay[0]);
-
 
         // Create the header element
         let thead = document.createElement("thead");
@@ -111,17 +101,10 @@ function createTable(dataToDisplay) {
                 if (item !== 'Date' && item !== 'Title') {
                     th.style.display = 'none'
                 }
-                
 
                 tr.appendChild(th); // Append the header cell to the header row
             }
-
-
-
         });
-
-
-
 
         thead.appendChild(tr); // Append the header row to the header
         table.append(thead) // Append the header to the table
@@ -158,13 +141,12 @@ function createTable(dataToDisplay) {
                 tr.onclick = function () {
                     displayEvent(item['ID'])
                 }
-               
+
             }
 
             allHtmlRows.push(tr)
             //tbody.appendChild(tr); // Append the table row to the table
         });
-
 
         // divide rows into pages
 
@@ -179,19 +161,13 @@ function createTable(dataToDisplay) {
             tbody.appendChild(tr)
         })
 
-
         table.appendChild(tbody)
         container.appendChild(table) // Append the table to the container element
-
-        //     // tell DatabTables to add styling etc.
-        // $('#myTable').DataTable();
     }
 }
 
 // display single event above table view
 function displayEvent(id) {
-
-
 
     // Get the container element where the table will be inserted
     let container = document.getElementById("clickedEntry");
@@ -204,12 +180,7 @@ function displayEvent(id) {
     table.setAttribute('id', 'resultTable')
     table.classList.add('table')
 
-
-
-
     // Get the keys (column names) of the first object in the JSON data
-
-
     // Create the header element
 
     let tbody = document.createElement('tbody')
@@ -241,10 +212,7 @@ function displayEvent(id) {
             tr.appendChild(td)
             tbody.appendChild(tr)
         }
-
     });
-
-
 
     table.appendChild(tbody)
     container.appendChild(table) // Append the table to the container element
@@ -254,33 +222,29 @@ function displayEvent(id) {
 
     // scroll to results card
     document.getElementById('resultsCard').scrollIntoView()
-
 }
 
-
 function createGenreRadios() {
-console.log('create')
     // get all possible genres from 'Type' column
     var types = Object.keys(_.countBy(allData, function (data) {
         if (data.Type) {
-             // strip anything in rounded or square brackets
-        let type = data.Type.replace(/ *\([^)]*\) */g, "")
-        type = type.replace(/ *\[[^\]]*]/, '')
-        type = type.trim()
-        return type;
+            // strip anything in rounded or square brackets
+            let type = data.Type.replace(/ *\([^)]*\) */g, "")
+            type = type.replace(/ *\[[^\]]*]/, '')
+            type = type.trim()
+            return type;
         }
-       
+
     }))
 
     // case insensitive alphabetical sort
     var typesSorted = types.sort((a, b) => {
-        return a.localeCompare(b, undefined, {sensitivity: 'base'});
-      });
-    console.log(typesSorted)
+        return a.localeCompare(b, undefined, { sensitivity: 'base' });
+    });
 
     typesSorted.forEach((type) => {
         // exclude blank
-        if (type != '' && type != undefined && type != 'undefined' ) {
+        if (type != '' && type != undefined && type != 'undefined') {
             var input = document.createElement('input')
             input.classList.add('form-check-input')
             input.setAttribute('type', 'radio')
@@ -302,9 +266,6 @@ console.log('create')
             container.appendChild(div)
         }
     })
-
-
-
 }
 
 function createCalendar(month, year) {
@@ -324,13 +285,9 @@ function createCalendar(month, year) {
         yearPicker.appendChild(option)
     }
 
-
-
     let monthAndYear = document.getElementById("monthAndYear");
-
     let firstDay = (new Date(year, month)).getDay();
     let daysInMonth = 32 - new Date(year, month, 32).getDate();
-
     let tbl = document.getElementById("calendar-body"); // body of the calendar
 
     // clearing all previous cells
@@ -386,46 +343,30 @@ function createCalendar(month, year) {
                         icon.setAttribute('style', 'color: ' + e[Object.keys(e)[0]]['colour'] + '; cursor: pointer;')
 
                         icon.onclick = function () {
-                                displayEvent(eventID)
-                        //     var chosenEvent = _.find(allData, function (o) { return o['ID'] === eventID })
-                        //     // build event
-                        //     var tbody = document.getElementById('calTableBody')
-                        //     // clear current table contents
-                        //     tbody.replaceChildren()
-
-                        //     var tr = document.createElement('tr')
-
-                        //     for (let i = 0; i < Object.keys(chosenEvent).length - 4; i++) {
-
-
-                        //         let td = document.createElement("td");
-                        //         // first column is date and needs styling 
-                        //         var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
-                        //         if (i === 0) {
-                        //             var formattedDates = shorternDates(innerText)
-                        //             td.innerText = formattedDates; // Set the value as the text of the table cell
-                        //         } else {
-                        //             td.innerText = innerText; // Set the value as the text of the table cell
-                        //         }
-
-
-
-
-                        //         tr.appendChild(td); // Append the table cell to the table row
-
-
-
-                        //     }
-
-                        //     tbody.appendChild(tr); // Append the table row to the table
-
-
+                            displayEvent(eventID)
+                            //     var chosenEvent = _.find(allData, function (o) { return o['ID'] === eventID })
+                            //     // build event
+                            //     var tbody = document.getElementById('calTableBody')
+                            //     // clear current table contents
+                            //     tbody.replaceChildren()
+                            //     var tr = document.createElement('tr')
+                            //     for (let i = 0; i < Object.keys(chosenEvent).length - 4; i++) {
+                            //         let td = document.createElement("td");
+                            //         // first column is date and needs styling 
+                            //         var innerText = chosenEvent[Object.keys(chosenEvent)[i]];
+                            //         if (i === 0) {
+                            //             var formattedDates = shorternDates(innerText)
+                            //             td.innerText = formattedDates; // Set the value as the text of the table cell
+                            //         } else {
+                            //             td.innerText = innerText; // Set the value as the text of the table cell
+                            //         }
+                            //         tr.appendChild(td); // Append the table cell to the table row
+                            //     }
+                            //     tbody.appendChild(tr); // Append the table row to the table
                         }
                         cell.appendChild(icon)
-
                     }
                 })
-
 
                 row.appendChild(cell);
                 date++;
@@ -436,8 +377,6 @@ function createCalendar(month, year) {
     }
 
 }
-
-
 
 // note expects month to be zero indexed e.g. January = 0
 function getEventsForMonth(month, year) {
@@ -457,9 +396,9 @@ function getEventsForMonth(month, year) {
 
         for (let index = 0; index < dates.length; index++) {
             var date = new Date(dates[index])
-          
+
             if (date.getFullYear() === year && date.getMonth() === month) {
-             
+
                 var obj = {}
                 entry['colour'] = colours[currentColour]
                 obj[date] = entry
@@ -471,11 +410,9 @@ function getEventsForMonth(month, year) {
     })
 
     return events
-
 }
 
 function nextTablePage() {
-
     //add next rows if there are them
     if (allRowsIntoPages[currentPage + 1]) {
         // remove current rows
@@ -486,7 +423,6 @@ function nextTablePage() {
             tbody.appendChild(tr)
         })
     }
-
 }
 
 function previousTablePage() {
@@ -501,7 +437,6 @@ function previousTablePage() {
         })
     }
 }
-
 
 function next() {
     // see if changing year would take it after the earliest
@@ -540,27 +475,20 @@ function jump() {
     createCalendar(currentMonth, currentYear);
 }
 
-
-
 // ----- standardising content
-
 function standardiseTypeCol(parsedData) {
-
     parsedData.forEach((el) => {
-       
         // only first letter should be upper case and remove spaces at start or end
-       if (el.Type) {
-        el.Type = el.Type.trim()
-        el.Type = el.Type.toLowerCase()
-        el.Type = el.Type.charAt(0).toUpperCase() + el.Type.slice(1)
-       }
-        
+        if (el.Type) {
+            el.Type = el.Type.trim()
+            el.Type = el.Type.toLowerCase()
+            el.Type = el.Type.charAt(0).toUpperCase() + el.Type.slice(1)
+        }
     })
     return parsedData
 }
 
 function standardiseDataCol(data) {
-
     // reformat date col to be human readable and create new machine readable column to use for calendar etc.
     data.forEach((el) => {
         // split into list based on ;
@@ -571,7 +499,7 @@ function standardiseDataCol(data) {
         var formattedDatesWithStrings = []
 
         dates.forEach((d) => {
-        
+
             // remove space
             d = d.trim()
             var dateIsolated = d.substring(0, 9)
@@ -584,66 +512,56 @@ function standardiseDataCol(data) {
             if (day[0] === 0) {
                 day = day[1]
             }
-            
-                var date = new Date(yr, month, day)
 
-                if (!isValidDate(date) || date.toDateString() === 'Invalid Date') {
-                    console.log('problem with date: ')
-                    console.log(d)
-                    console.log(dateIsolated)
-                } else {
+            var date = new Date(yr, month, day)
+
+            if (!isValidDate(date) || date.toDateString() === 'Invalid Date') {
+                console.log(`problem with date: ${d} ${dateIsolated}`)
+            } else {
 
                 formattedDates.push(date.toDateString())
-            formattedDatesWithStrings.push(date.toDateString() + ' ' + restOfDate) 
-                } 
-           
+                formattedDatesWithStrings.push(date.toDateString() + ' ' + restOfDate)
+            }
+
         })
 
         el.Date = formattedDatesWithStrings.join(', ')
         el['datesformatted'] = formattedDates.join(', ')
     })
-
     return data
 }
 
-function isValidDate(dateObject){
+function isValidDate(dateObject) {
     return new Date(dateObject).toString() !== 'Invalid Date';
 }
 
 function shorternDates(dates) {
     var formatted = []
-
-    
-
     dates.split(',').forEach((d) => {
         let partsOfDate = []
         // dates are either split by en dash (short) or or em dash (long) so replace with simple dashes
         let dTidied = d.replace(/\u2013|\u2014/g, "-")
-            partsOfDate = dTidied.split('-')
-       
+        partsOfDate = dTidied.split('-')
+
         if (partsOfDate.length > 0) {
-             df = new Date(partsOfDate[0])
+            df = new Date(partsOfDate[0])
 
-        if (!isValidDate(df)) {
-            console.log('problem shortening date')
-            console.log(partsOfDate[0])
-       
-        }
+            if (!isValidDate(df)) {
+                console.log(`problem shortening date ${partsOfDate[0]}`)
 
-        if (partsOfDate[1]) {
-            formatted.push(df.toLocaleDateString() + ' - ' + partsOfDate[1])
-        } else {
-            formatted.push(df.toLocaleDateString())
-        }
-        }
-       
+            }
 
+            if (partsOfDate[1]) {
+                formatted.push(df.toLocaleDateString() + ' - ' + partsOfDate[1])
+            } else {
+                formatted.push(df.toLocaleDateString())
+            }
+        }
     })
     return formatted.join(', ')
 }
 
 //  ----- filtering data
-
 function filterGenre(type) {
 
     var container = document.getElementById('showData')
@@ -654,12 +572,10 @@ function filterGenre(type) {
     } else {
 
         // select only entries where type is correct
-        
-        var filteredData = _.filter(allData, function (o) { 
+        var filteredData = _.filter(allData, function (o) {
             if (o.Type) {
-                 return o.Type.startsWith(type); 
+                return o.Type.startsWith(type);
             }
-           
         });
         displayedData = filteredData
         createTable(filteredData)
@@ -667,9 +583,7 @@ function filterGenre(type) {
 }
 
 // -----
-
 function browseAll() {
-
     // hide calendar etc
     $('#calendar').hide()
     $('#browse').show()
@@ -686,7 +600,6 @@ function browseAll() {
 
     // create table fresh
     createTable(allData)
-
 }
 
 function showCalendar() {
@@ -700,7 +613,6 @@ function showCalendar() {
 
     // reset data list
     dataToDisplay = allData
-
 }
 
 function showSearch() {
@@ -726,10 +638,10 @@ function closeResultsCard() {
 }
 
 function searchIfEnter(e) {
-if (e.keyCode === 13) {
-    e.preventDefault()
-    searchDisplayedData()
-}
+    if (e.keyCode === 13) {
+        e.preventDefault()
+        searchDisplayedData()
+    }
 }
 
 function searchDisplayedData() {
@@ -744,26 +656,22 @@ function searchDisplayedData() {
     if (searchFor && searchFor.length > 0) {
         // search title, writers, composers, company, director and cast columns
         displayedData.forEach((entry) => {
-            var searchText = (entry['Title'] + entry['Writers'] + entry['Composers'] + entry['Company'] + entry['Director'] + entry['Cast']).toString().toLowerCase()
+            var searchText = (entry['Title'] + entry['Writers'] + entry['Composers'] + entry['Company'] + entry['Director'] + entry['Cast'] + entry['Production Team']).toString().toLowerCase()
 
             if (searchText.includes(searchFor)) {
                 results.push(entry)
             }
         })
         displayedData = results
-       
+
         createTable(results)
     }
     else {
         createTable(allData)
     }
-
-
-
 }
 
 function clearSearch() {
     document.getElementById('searchInput').value = ''
     createTable(allData)
 }
-
